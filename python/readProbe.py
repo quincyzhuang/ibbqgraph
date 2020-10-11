@@ -37,6 +37,7 @@ class MyDelegate(btle.DefaultDelegate):
                     100
                     * ((batMax * currentV[0] / maxV[0] - batMin) / (batMax - batMin))
                 )
+                push_battery(batteryPct)
         else:
             while len(data) > 0:
                 v, data = data[0:2], data[2:]
