@@ -1,1 +1,4 @@
 archive/
+python/prom_client.pyc
+python/__pycache__
+python/temp.txt
