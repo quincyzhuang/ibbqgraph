@@ -7,8 +7,6 @@ jobs: temperature collector probe 1/2
 
 Grafana systemd service is started at boot 
  - Check status with sudo service grafana-server status
-Grafana creds:
-admin/msterswrd888!
 
 Prometheus and Pushgateway are also configured at startup
  - prometheus.service
