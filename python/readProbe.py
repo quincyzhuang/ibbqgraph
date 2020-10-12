@@ -39,23 +39,23 @@ class IbbqDevice():
     def setBatteryLevel(self,pct):
         self.batterylevel = pct
 
-    def disconnect():
+    def disconnect(self):
         self.connected = False
         self.device.disconnect()
 
-    def isConnected():
+    def isConnected(self):
         return self.connected
 
-    def getTemperature():
+    def getTemperature(self):
         return (self.probe1,self.probe2)
 
-    def getBatteryLevel():
+    def getBatteryLevel(self):
         return self.batterylevel
 
-    def getCharacteristics():
+    def getCharacteristics(self):
         return self.characteristics
 
-    def getDevice():
+    def getDevice(self):
         return self.device
 
 class MyDelegate(btle.DefaultDelegate):
@@ -106,8 +106,8 @@ def connect():
             ibbq_device = IbbqDevice(dev,dev_chars)
             #
             dev_chars["auth"].write(AUTH_DATA,withResponse=True)
-            dev.writeCharacteristic(rt.getHandle() + 1,NOTIFY)
-            dev.writeCharacteristic(set.getHandle() + 1,NOTIFY)
+            dev.writeCharacteristic(dev_chars["rt"].getHandle() + 1,NOTIFY)
+            dev.writeCharacteristic(dev_chars["set"].getHandle() + 1,NOTIFY)
             dev_chars["setD"].write(BATTERY_ENABLE)
             dev_chars["setD"].write(RT_ENABLE)
             print("Authenticated successfully!")
