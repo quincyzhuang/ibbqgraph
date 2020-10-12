@@ -1,9 +1,8 @@
-# ibbqgraph - Python3 integreation with iBBQ probe and Prometheus Pushgateway
+# ibbqgraph - Python3 integration with iBBQ probe and Prometheus Pushgateway
 
-Prometheus ibb monitoring service
+Prometheus Metric: ibbq_temp_f, ibbq_battery
 
-Metric: ibbq_temp_celcius
-jobs: temperature collector probe 1/2
+Jobs: temperature collector probe 1/2
 
 Grafana systemd service is started at boot 
  - Check status with sudo service grafana-server status
