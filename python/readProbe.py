@@ -64,15 +64,13 @@ class MyDelegate(btle.DefaultDelegate):
         # ... initialise here
     def handleNotification(self, cHandle, data):
         result = list()
+        batMin = 0.9
+        batMax = 1.5
         if cHandle == 37:
             if data[0] == 0x24:
-                #print("Received battery data")
                 currentV = struct.unpack("<H", data[1:3])
                 maxV = struct.unpack("<H", data[3:5])
-                batteryPct = int(
-                    100
-                    * ((batMax * currentV[0] / maxV[0] - batMin) / (batMax - batMin))
-                )
+                batteryPct = int(100 *((batMax * currentV[0] / maxV[0] - batMin) / (batMax - batMin)))
                 push_battery(batteryPct)
         else:
             while len(data) > 0:
@@ -94,6 +92,7 @@ class MyDelegate(btle.DefaultDelegate):
 def connect():
     for i in range(0,5):
         try:
+            ibbq_device = ''
             dev = btle.Peripheral(DEVICE_MAC)
             dev_chars = dict()
             print("Connected to " + str(dev.addr))
@@ -108,7 +107,6 @@ def connect():
             dev_chars["auth"].write(AUTH_DATA,withResponse=True)
             dev.writeCharacteristic(dev_chars["rt"].getHandle() + 1,NOTIFY)
             dev.writeCharacteristic(dev_chars["set"].getHandle() + 1,NOTIFY)
-            dev_chars["setD"].write(BATTERY_ENABLE)
             dev_chars["setD"].write(RT_ENABLE)
             print("Authenticated successfully!")
         except BTLEException:
@@ -130,11 +128,16 @@ def connect():
 def pollData(device_object):
     dev = device_object.getDevice()
     dev.setDelegate(MyDelegate())
+    char = device_object.getCharacteristics()
+    counter = 0
     for i in range(0,5):
         try:
             while True:
                 if dev.waitForNotifications(1):
-                    continue
+                    counter+=1
+                    if counter % 50 == 0:
+                        char["setD"].write(BATTERY_ENABLE)
+                        continue
         except BTLEException:
             print("Retrying data transfer. Attempt " + str(i) + " of 5")
             continue

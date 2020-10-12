@@ -26,5 +26,5 @@ def prom_battery(pct):
 
 def push_battery(pct):
     registry = prom_battery(pct)
-    push_to_gateway(DESTINATIION,"battery level collector", registry)
+    push_to_gateway(DESTINATION,"battery level collector", registry)
 
