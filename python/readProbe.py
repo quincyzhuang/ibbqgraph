@@ -125,7 +125,7 @@ def connect():
             ibbq_device.disconnect()
     return ibbq_device
 
-def pollData(device_object):
+def pollData(device_object,ztime):
     dev = device_object.getDevice()
     dev.setDelegate(MyDelegate())
     char = device_object.getCharacteristics()
@@ -137,7 +137,9 @@ def pollData(device_object):
                     counter+=1
                     if counter % 50 == 0:
                         char["setD"].write(BATTERY_ENABLE)
-                        continue
+                    if counter % 10 == 0:
+                        push_time(time.perf_counter()-ztime)
+                    continue
         except BTLEException:
             print("Retrying data transfer. Attempt " + str(i) + " of 5")
             continue
@@ -152,9 +154,10 @@ def pollData(device_object):
         dev.disconnect()
 
 while True:
+    time_b = time.perf_counter()
     print("Connecting...")
     my_device = connect()
     if my_device.isConnected() != True:
         continue
     print("Collecting data...")
-    pollData(my_device)
+    pollData(my_device,time_b)

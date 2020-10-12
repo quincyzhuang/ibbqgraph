@@ -3,6 +3,7 @@ from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 TEMP_METRIC = "ibbq_temp_f"
 BATTERY_METRIC = "ibbq_battery"
+TIME_METRIC = "ibbq_time"
 DESTINATION = "localhost:9091"
 
 def prom_temperature(temp):
@@ -27,4 +28,15 @@ def prom_battery(pct):
 def push_battery(pct):
     registry = prom_battery(pct)
     push_to_gateway(DESTINATION,"battery level collector", registry)
+
+def prom_time(sec):
+    registry = CollectorRegistry()
+    g = Gauge(TIME_METRIC, "iBBQ monitoring uptime", registry=registry)
+    g.set(sec)
+    return registry
+
+def push_time(sec):
+    registry = prom_time(sec)
+    push_to_gateway(DESTINATION,"time collector", registry)
+
 
